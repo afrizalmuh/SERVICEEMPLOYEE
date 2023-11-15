@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"encoding/json"
-	"serviceemployee/configs"
 	"net/http"
+	"fmt"
+	"serviceemployee/configs"
 	"serviceemployee/models"
 	"serviceemployee/helpers"
 	"github.com/gorilla/mux"
-	"fmt"
 )
 
 func GetEmployee(w http.ResponseWriter, r *http.Request) {
@@ -55,5 +55,24 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helpers.Response(w, 201, "Update Successfully", nil)
+	helpers.Response(w, 200, "Update Successfully", nil)
+}
+
+func DeleteEmployee(w http.ResponseWriter, r *http.Request){
+	var employee models.Employee
+
+	vars := mux.Vars(r)
+	employeeId := vars["id"]
+
+	if err := configs.DB.First(&employee, "id = ?", employeeId).Error; err != nil {
+		helpers.Response(w, 404, "Employee not found", nil)
+		return
+	}
+
+	if err := configs.DB.Delete(&employee, employeeId).Error; err != nil {
+		helpers.Response(w, 404, "Employee not found", nil)
+		return
+	}
+
+	helpers.Response(w, 200, "Delete Successfully", nil)
 }

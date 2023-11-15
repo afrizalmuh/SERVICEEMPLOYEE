@@ -13,4 +13,5 @@ func EmployeeRoutes(r *mux.Router){
 
 	router.HandleFunc("/me", controllers.GetEmployee).Methods("GET")
 	router.HandleFunc("/me/{id}", controllers.UpdateEmployee).Methods("PUT")
+	router.HandleFunc("/me/{id}", controllers.DeleteEmployee).Methods("DELETE")
 }

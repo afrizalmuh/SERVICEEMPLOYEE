@@ -23,7 +23,7 @@ func CreateToken(employee *models.Employee) (string, error){
 		employee.Name,
 		employee.Email,
 		jwt.RegisteredClaims {
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(5 * time.Minute)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(60 * time.Minute)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
 		},
