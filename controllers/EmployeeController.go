@@ -34,13 +34,24 @@ func UpdateEmployee(w http.ResponseWriter, r *http.Request) {
 	
 	fmt.Println(employeeId)
 
+	if register.Name == "" || register.Email == "" {
+		helpers.Response(w, http.StatusBadRequest, "Name and Email are required fields", nil)
+		return
+	}
+
 	employee := models.Employee {
 		Name:			register.Name,
 		Email:		register.Email,
 	}
 
-	if err := configs.DB.Where("id", employeeId).Updates(&employee).Error; err != nil {
-		helpers.Response(w, 500, err.Error(), nil) 
+	if err := configs.DB.First(&employee, "id = ?", employeeId).Error; err != nil {
+		helpers.Response(w, 404, "Employee not found", nil)
+		return
+	}
+
+	// Update employee information
+	if err := configs.DB.Model(&models.Employee{}).Where("id = ?", employeeId).Updates(&employee).Error; err != nil {
+		helpers.Response(w, http.StatusInternalServerError, err.Error(), nil)
 		return
 	}
 
